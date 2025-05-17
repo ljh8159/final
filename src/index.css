@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #424fb5; /* 배경이 잘 보이도록 어둡게 */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#root {
+  width: 390px;         /* 아이폰 12/13/14 기준 */
+  height: 844px;        /* 아이폰 12/13/14 기준 */
+  margin: 0 auto;
+  box-shadow: 0 0 24px rgba(0,0,0,0.15);
+  border-radius: 24px;
+  overflow: hidden;
+  background: transparent;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
