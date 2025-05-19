@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const path = require('path');
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const USERS_FILE = './users.json';
+const USERS_FILE = path.join(__dirname, 'users.json');
 
 app.post('/signup', (req, res) => {
   const { email, password } = req.body;
@@ -22,6 +23,8 @@ app.post('/signup', (req, res) => {
   res.json({ success: true, message: '회원가입 성공!' });
 });
 
-app.listen(4000, () => {
-  console.log('백엔드 서버 실행중: http://localhost:4000');
+// Render 환경에서는 반드시 process.env.PORT 사용!
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`백엔드 서버 실행중: http://localhost:${PORT}`);
 });
