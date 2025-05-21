@@ -1,26 +1,51 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+const { Pool } = require('pg');
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const USERS_FILE = path.join(__dirname, 'users.json');
+// PostgreSQL 연결 설정
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
-app.post('/signup', (req, res) => {
+// 회원가입 라우트
+app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
-  let users = [];
-  if (fs.existsSync(USERS_FILE)) {
-    users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8'));
+  try {
+    // 이미 존재하는 이메일 체크
+    const userCheck = await pool.query('SELECT * FROM user_log_info WHERE email = $1', [email]);
+    if (userCheck.rows.length > 0) {
+      return res.json({ success: false, message: '이미 가입된 이메일입니다.' });
+    }
+    // 회원정보 저장
+    await pool.query('INSERT INTO user_log_info (email, password) VALUES ($1, $2)', [email, password]);
+    res.json({ success: true, message: '회원가입 성공!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: '서버 오류' });
   }
-  // 이미 존재하는 이메일 체크
-  if (users.find(u => u.email === email)) {
-    return res.json({ success: false, message: '이미 가입된 이메일입니다.' });
+});
+
+// 로그인 라우트
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await pool.query(
+      'SELECT * FROM user_log_info WHERE email = $1 AND password = $2',
+      [email, password]
+    );
+    if (user.rows.length > 0) {
+      res.json({ success: true, message: '로그인 성공!' });
+    } else {
+      res.json({ success: false, message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: '서버 오류' });
   }
-  users.push({ email, password });
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  res.json({ success: true, message: '회원가입 성공!' });
 });
 
 // Render 환경에서는 반드시 process.env.PORT 사용!
