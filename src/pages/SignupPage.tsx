@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom'; // v5에서는 useHistory 사용
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+console.log('API_URL:', API_URL);
 
 function SignupPage() {
   const [form, setForm] = useState({ email: '', password: '' });
+  const history = useHistory(); // v5
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,6 +22,9 @@ function SignupPage() {
       });
       const data = await res.json();
       alert(data.message);
+      if (data.success) {
+        history.push('/'); // v5에서는 push로 이동
+      }
     } catch (err) {
       alert('회원가입 실패');
     }
@@ -46,7 +52,16 @@ function SignupPage() {
           required
           style={{ width: '100%', marginBottom: 12, padding: 8 }}
         />
-        <button type="submit" style={{ width: '100%', padding: 10, background: '#ffd600', border: 'none', borderRadius: 8 }}>
+        <button
+          type="submit"
+          style={{
+            width: '100%',
+            padding: 10,
+            background: '#ffd600',
+            border: 'none',
+            borderRadius: 8,
+          }}
+        >
           회원가입
         </button>
       </form>
