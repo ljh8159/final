@@ -1,0 +1,30 @@
+.container {
+  min-height: 100vh;
+  width: 100vw;
+  background: #f7f8fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 48px;
+}
+
+.title {
+  color: #e63946;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 18px;
+  letter-spacing: -1px;
+}
+
+.mapArea {
+  width: 340px;
+  height: 480px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

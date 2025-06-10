@@ -48,8 +48,15 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Render 환경에서는 반드시 process.env.PORT 사용!
-const PORT = process.env.PORT || 4000;
+// 신고(Report) 라우트 추가
+app.post('/report', async (req, res) => {
+  // 실제로는 파일 업로드, DB 저장 등을 구현해야 함
+  // 지금은 테스트용으로 성공 메시지만 반환
+  res.json({ status: "accept", message: "신고가 접수되었습니다." });
+});
+
+// 서버 실행 (맨 아래 한 번만!)
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`백엔드 서버 실행중: http://localhost:${PORT}`);
 });
